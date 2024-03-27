@@ -1,17 +1,22 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace DockerScan
 {
-    public class JiraManager {
+    public class JiraManager
+    {
+
+        private readonly IConfigurationRoot _configuration;
+
+        public JiraManager(IConfigurationRoot configuration)
+            => _configuration = configuration;
 
         public async Task Post(string dockerImaegeName) {
 
             Console.WriteLine("Started:");
 
             const string jiraBaseUrl = "https://classltd.atlassian.net";
-            const string username = "tala.rajabi@class.com.au";
-            const string apiToken = "ATATT3xFfGF0hbSPu0HbhQNI0DcIxa6QA2GEBVd0wV81SUsxoYzC8p7P_u4m8MW1YfKhRKjsT6fKPNXjD0Lf1AIvmaz-lOFIp4EwJuqpBgfyFw6JE8YfekG1RkGG24IczLo--8_4HcemsZyXjA85GMys_1Wl9r5V0E6lLydkUnOGxe-VQ2XrOSU=16E9C057";
 
             JiraIssue newIssue = new JiraIssue
             {
@@ -24,7 +29,10 @@ namespace DockerScan
 
             try
             {
-                var response = await newIssue.CreateStoryAsync(jiraBaseUrl, username, apiToken);
+                var response = await newIssue.CreateStoryAsync(
+                    jiraBaseUrl, 
+                    _configuration["jira:username"], 
+                    _configuration["jira:token"]);
                 Console.WriteLine("Issue created successfully. Response:");
                 Console.WriteLine(response);
             }
@@ -44,7 +52,7 @@ namespace DockerScan
         public required string DescriptionType { get; set; }
         public required string Text { get; set; }
 
-        public async Task<string> CreateStoryAsync(string jiraBaseUrl, string username, string apiToken)
+        public async Task<string> CreateStoryAsync(string jiraBaseUrl, string? username, string? apiToken)
         {
             string url = $"{jiraBaseUrl}/rest/api/3/issue";
             string credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{apiToken}"));
@@ -75,7 +83,7 @@ namespace DockerScan
                         }
                     }
                     },
-                    issuetype = new Issuetype { Name = "Story" },
+                    issuetype = new Issuetype { name = "Story" },
                     priority = new Priority { name = "High" },
                     labels = new List<string> { "label1", "label2" }
                 }
@@ -142,7 +150,7 @@ namespace DockerScan
 
     public class Issuetype
     {
-        public string Name { get; set; }
+        public string name { get; set; }
     }
 
     public class Priority

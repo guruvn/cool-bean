@@ -2,18 +2,12 @@
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using DockerScan;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-
-var dockerImageName = "Class-App-ImageName-" + DateTime.Now.ToShortDateString();
-
-JiraManager jiraManager = new JiraManager();
-await jiraManager.Post(dockerImageName);
-
-const string registryAddress = "unix:///var/run/docker.sock";;
 
 try
 {
-    using var client = new DockerClientConfiguration(new Uri(registryAddress)).CreateClient();
+    using var client = new DockerClientConfiguration(new Uri(ResolveDockerRegistryUrl())).CreateClient();
     await ListAndInspectImages(client);
 }
 catch (Exception ex)
@@ -21,10 +15,26 @@ catch (Exception ex)
     Console.WriteLine($"An error occurred: {ex.Message}");
 }
 
+static string ResolveDockerRegistryUrl()
+{
+    var platform = Environment.OSVersion.Platform;
+
+        // Check if the platform is Windows
+        return platform == PlatformID.Win32NT || platform == PlatformID.Win32S ||
+               platform == PlatformID.Win32Windows || platform == PlatformID.WinCE
+               ? "npipe://./pipe/docker_engine"
+               : "unix:///var/run/docker.sock";
+}
+
 static async Task ListAndInspectImages(IDockerClient client)
 {
+    var config = new ConfigurationBuilder()
+        .AddUserSecrets<Program>()
+        .Build();
+    
     var images = await client.Images.ListImagesAsync(new ImagesListParameters { All = true });
     var defaultColor = Console.ForegroundColor;
+    var jiraManager = new JiraManager(config);
 
     foreach (var image in images)
     {
@@ -35,6 +45,7 @@ static async Task ListAndInspectImages(IDockerClient client)
         if (inspectResponse.RepoDigests?.Count == 0) {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"{image.RepoTags[0]} is not signed.");
+            await jiraManager.Post(image.RepoTags[0]).ConfigureAwait(false);
         }
         else {
             Console.ForegroundColor = ConsoleColor.Green;
