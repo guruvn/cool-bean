@@ -19,7 +19,7 @@ namespace DockerScan
 
             string jiraBaseUrl = "https://classltd.atlassian.net";
             string username = "tala.rajabi@class.com.au";
-            string apiToken = "ATATT3xFfGF0Tp7JXO-SleqLwE8v6xzHPwo4ZuBCymeBVlReUaFVZAMZ7EO1HK42q9vC8S0qNCwGPuBEQtoBHW_3WZ-pRvDQAFjhF6xpYdUwOs5G5slgv903lgBzsDL3WLnO-fQh5-j_uTUU-1VEMejJG9pAHqD_pERdJF9kwMni0bw3E9OwMYI=3CFF8EE2";
+            string apiToken = "ATATT3xFfGF0hbSPu0HbhQNI0DcIxa6QA2GEBVd0wV81SUsxoYzC8p7P_u4m8MW1YfKhRKjsT6fKPNXjD0Lf1AIvmaz-lOFIp4EwJuqpBgfyFw6JE8YfekG1RkGG24IczLo--8_4HcemsZyXjA85GMys_1Wl9r5V0E6lLydkUnOGxe-VQ2XrOSU=16E9C057";
 
             JiraIssue newIssue = new JiraIssue
             {
