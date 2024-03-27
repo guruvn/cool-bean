@@ -21,7 +21,10 @@ namespace DockerScan
 
             const string jiraBaseUrl = "https://classltd.atlassian.net";
 
-            var inputText = $"As a system owner, I would like all Docker images to be signed. This way, I can ensure that all images we're deploying originate from a trusted source and haven't been tampered with. Without signing, there's a risk of deploying malicious or compromised images, which can lead to serious security breaches and compromise the integrity of your infrastructure. By signing Docker images, you establish a chain of trust, which is crucial for maintaining the security of your containerised applications and environments.\r\n\r\nGiven the critical importance of maintaining the integrity and security of our containerised applications,\r\n\r\nWhen {dockerImageName} is created,\r\n\r\nThen, it is imperative to implement image signing to ensure that images originate from trusted sources and have not been tampered wit";
+            var inputText = "*As a system owner*, I would like all Docker images to be signed. This way, I can ensure that all images we're deploying originate from a trusted source and haven't been tampered with. Without signing, there's a risk of deploying malicious or compromised images, which can lead to serious security breaches and compromise the integrity of your infrastructure. By signing Docker images, you establish a chain of trust, which is crucial for maintaining the security of your containerised applications and environments.\n\n\n" 
+                            + "*Given* the critical importance of maintaining the integrity and security of our containerised applications.\n"
+                            + $"*When* {dockerImageName} is created.\n"
+                            + "*Then*, it is imperative to implement image signing to ensure that images originate from trusted sources and have not been tampered with.\n";
             var aiGeneratedText = await GenerateAIText.InvokeClaudeAsync(inputText).ConfigureAwait(false);
 
             var newIssue = new JiraIssue {

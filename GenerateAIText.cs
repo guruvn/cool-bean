@@ -51,7 +51,12 @@ namespace DockerScan
             }
             catch (AmazonBedrockRuntimeException e)
             {
+                var defaultColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(@"Booyahhhhh! => AWS Bedrock \(^o^)/");
+                Console.ForegroundColor = Console.BackgroundColor;
                 Console.WriteLine(e.Message);
+                Console.ForegroundColor = defaultColor;
             }
             
             return string.IsNullOrWhiteSpace(generatedText) ? prompt : generatedText;
