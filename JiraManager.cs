@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +11,39 @@ using System.Collections.Generic;
 
 namespace DockerScan
 {
+    public class JiraManager {
+
+        public async Task Post() {
+
+            Console.WriteLine("Started:");
+
+            string jiraBaseUrl = "https://classltd.atlassian.net";
+            string username = "SVC_Jira_CNC_API@class.com.au";
+            string apiToken = "YsmHHzcpzJCe1Yrd6Z3H06BF";
+
+            JiraIssue newIssue = new JiraIssue
+            {
+                ProjectKey = "CB",
+                Summary = "New Story Title",
+                DescriptionType = "doc",
+                Text = "Hackathon story creating via REST API"
+            };
+
+
+            try
+            {
+                string response = await newIssue.CreateStoryAsync(jiraBaseUrl, username, apiToken);
+                Console.WriteLine("Issue created successfully. Response:");
+                Console.WriteLine(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating issue: {ex.Message}");
+            }
+
+            Console.WriteLine("Finished");
+        }
+    }
 
     public class JiraIssue
     {
