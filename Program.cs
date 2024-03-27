@@ -1,6 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using DockerScan;
+
+JiraManager jiraManager = new JiraManager();
+await jiraManager.Post();
 
 const string registryAddress = "unix:///var/run/docker.sock";;
 
