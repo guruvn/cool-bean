@@ -1,32 +1,36 @@
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+#pragma warning disable CS8618
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+
 
 namespace DockerScan
 {
     public class JiraManager
     {
-
         private readonly IConfigurationRoot _configuration;
 
         public JiraManager(IConfigurationRoot configuration)
             => _configuration = configuration;
 
-        public async Task Post(string dockerImaegeName) {
+        public async Task Post(string dockerImageName) {
 
             Console.WriteLine("Started:");
 
             const string jiraBaseUrl = "https://classltd.atlassian.net";
 
-            JiraIssue newIssue = new JiraIssue
-            {
+            var inputText = $"As a system owner, I would like all Docker images to be signed. This way, I can ensure that all images we're deploying originate from a trusted source and haven't been tampered with. Without signing, there's a risk of deploying malicious or compromised images, which can lead to serious security breaches and compromise the integrity of your infrastructure. By signing Docker images, you establish a chain of trust, which is crucial for maintaining the security of your containerised applications and environments.\r\n\r\nGiven the critical importance of maintaining the integrity and security of our containerised applications,\r\n\r\nWhen {dockerImageName} is created,\r\n\r\nThen, it is imperative to implement image signing to ensure that images originate from trusted sources and have not been tampered wit";
+            var aiGeneratedText = await GenerateAIText.InvokeClaudeAsync(inputText).ConfigureAwait(false);
+
+            var newIssue = new JiraIssue {
                 ProjectKey = "CB",
-                Summary = $"Docker Image {dockerImaegeName} Not Signed",
+                Summary = $"Docker Image {dockerImageName} Not Signed",
                 DescriptionType = "doc",
-                Text = $"As a system owner, I would like all Docker images to be signed. This way, I can ensure that all images we're deploying originate from a trusted source and haven't been tampered with. Without signing, there's a risk of deploying malicious or compromised images, which can lead to serious security breaches and compromise the integrity of your infrastructure. By signing Docker images, you establish a chain of trust, which is crucial for maintaining the security of your containerised applications and environments.\r\n\r\nGiven the critical importance of maintaining the integrity and security of our containerised applications,\r\n\r\nWhen {dockerImaegeName} is created,\r\n\r\nThen, it is imperative to implement image signing to ensure that images originate from trusted sources and have not been tampered wit"
+                Text = aiGeneratedText
             };
-
-
+            
             try
             {
                 var response = await newIssue.CreateStoryAsync(
@@ -90,7 +94,7 @@ namespace DockerScan
             };
 
 
-            string jsonIssue = JsonSerializer.Serialize(newIssue);
+            var jsonIssue = JsonSerializer.Serialize(newIssue);
             var content = new StringContent(jsonIssue, Encoding.UTF8, "application/json");
 
             using var httpClient = new HttpClient();
