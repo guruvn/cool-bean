@@ -4,8 +4,10 @@ using Docker.DotNet.Models;
 using DockerScan;
 using Newtonsoft.Json;
 
+var dockerImageName = "Class-App-ImageName-" + DateTime.Now.ToShortDateString();
+
 JiraManager jiraManager = new JiraManager();
-await jiraManager.Post();
+await jiraManager.Post(dockerImageName);
 
 const string registryAddress = "unix:///var/run/docker.sock";;
 
