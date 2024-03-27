@@ -13,20 +13,20 @@ namespace DockerScan
 {
     public class JiraManager {
 
-        public async Task Post() {
+        public async Task Post(string dockerImaegeName) {
 
             Console.WriteLine("Started:");
 
             string jiraBaseUrl = "https://classltd.atlassian.net";
-            string username = "SVC_Jira_CNC_API@class.com.au";
-            string apiToken = "YsmHHzcpzJCe1Yrd6Z3H06BF";
+            string username = "tala.rajabi@class.com.au";
+            string apiToken = "ATATT3xFfGF0Tp7JXO-SleqLwE8v6xzHPwo4ZuBCymeBVlReUaFVZAMZ7EO1HK42q9vC8S0qNCwGPuBEQtoBHW_3WZ-pRvDQAFjhF6xpYdUwOs5G5slgv903lgBzsDL3WLnO-fQh5-j_uTUU-1VEMejJG9pAHqD_pERdJF9kwMni0bw3E9OwMYI=3CFF8EE2";
 
             JiraIssue newIssue = new JiraIssue
             {
                 ProjectKey = "CB",
-                Summary = "New Story Title",
+                Summary = $"Docker Image {dockerImaegeName} Not Signed",
                 DescriptionType = "doc",
-                Text = "Hackathon story creating via REST API"
+                Text = $"As a system owner, I would like all Docker images to be signed. This way, I can ensure that all images we're deploying originate from a trusted source and haven't been tampered with. Without signing, there's a risk of deploying malicious or compromised images, which can lead to serious security breaches and compromise the integrity of your infrastructure. By signing Docker images, you establish a chain of trust, which is crucial for maintaining the security of your containerised applications and environments.\r\n\r\nGiven the critical importance of maintaining the integrity and security of our containerised applications,\r\n\r\nWhen {dockerImaegeName} is created,\r\n\r\nThen, it is imperative to implement image signing to ensure that images originate from trusted sources and have not been tampered wit"
             };
 
 
