@@ -2,6 +2,7 @@
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using DockerScan;
+using Newtonsoft.Json;
 
 JiraManager jiraManager = new JiraManager();
 await jiraManager.Post();
@@ -21,6 +22,7 @@ catch (Exception ex)
 static async Task ListAndInspectImages(IDockerClient client)
 {
     var images = await client.Images.ListImagesAsync(new ImagesListParameters { All = true });
+    var defaultColor = Console.ForegroundColor;
 
     foreach (var image in images)
     {
@@ -28,7 +30,14 @@ static async Task ListAndInspectImages(IDockerClient client)
         var labels = inspectResponse.Config.Labels;
 
         // Check if the image has a label indicating it's signed
-        if (labels == null || !(labels.ContainsKey("signed") && labels["signed"] == "true"))
+        if (inspectResponse.RepoDigests?.Count == 0) {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"{image.RepoTags[0]} is not signed.");
+        }
+        else {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(JsonConvert.SerializeObject(inspectResponse.RepoDigests));
+        }
+        Console.ForegroundColor = defaultColor;
     }
 }
