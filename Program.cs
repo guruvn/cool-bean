@@ -2,7 +2,7 @@
 using Docker.DotNet;
 using Docker.DotNet.Models;
 
-const string registryAddress = "unix:///var/run/docker.sock";
+const string registryAddress = "unix:///var/run/docker.sock";;
 
 try
 {
