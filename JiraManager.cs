@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace DockerScan
 {
@@ -17,9 +9,9 @@ namespace DockerScan
 
             Console.WriteLine("Started:");
 
-            string jiraBaseUrl = "https://classltd.atlassian.net";
-            string username = "tala.rajabi@class.com.au";
-            string apiToken = "ATATT3xFfGF0hbSPu0HbhQNI0DcIxa6QA2GEBVd0wV81SUsxoYzC8p7P_u4m8MW1YfKhRKjsT6fKPNXjD0Lf1AIvmaz-lOFIp4EwJuqpBgfyFw6JE8YfekG1RkGG24IczLo--8_4HcemsZyXjA85GMys_1Wl9r5V0E6lLydkUnOGxe-VQ2XrOSU=16E9C057";
+            const string jiraBaseUrl = "https://classltd.atlassian.net";
+            const string username = "tala.rajabi@class.com.au";
+            const string apiToken = "ATATT3xFfGF0hbSPu0HbhQNI0DcIxa6QA2GEBVd0wV81SUsxoYzC8p7P_u4m8MW1YfKhRKjsT6fKPNXjD0Lf1AIvmaz-lOFIp4EwJuqpBgfyFw6JE8YfekG1RkGG24IczLo--8_4HcemsZyXjA85GMys_1Wl9r5V0E6lLydkUnOGxe-VQ2XrOSU=16E9C057";
 
             JiraIssue newIssue = new JiraIssue
             {
@@ -32,7 +24,7 @@ namespace DockerScan
 
             try
             {
-                string response = await newIssue.CreateStoryAsync(jiraBaseUrl, username, apiToken);
+                var response = await newIssue.CreateStoryAsync(jiraBaseUrl, username, apiToken);
                 Console.WriteLine("Issue created successfully. Response:");
                 Console.WriteLine(response);
             }
@@ -83,7 +75,7 @@ namespace DockerScan
                         }
                     }
                     },
-                    issuetype = new Issuetype { name = "Story" },
+                    issuetype = new Issuetype { Name = "Story" },
                     priority = new Priority { name = "High" },
                     labels = new List<string> { "label1", "label2" }
                 }
@@ -150,7 +142,7 @@ namespace DockerScan
 
     public class Issuetype
     {
-        public string name { get; set; }
+        public string Name { get; set; }
     }
 
     public class Priority
